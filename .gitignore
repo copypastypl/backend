@@ -9,6 +9,9 @@ __pycache__/
 # config files
 config.py
 
+# ide files
+.idea
+
 # Distribution / packaging
 .Python
 build/
