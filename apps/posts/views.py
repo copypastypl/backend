@@ -21,7 +21,8 @@ class PostView(ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_object(self):
-        return get_object_or_404(Post, author=self.request.user)
+        id = self.kwargs.get('pk')
+        return get_object_or_404(Post, id=id, author=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
