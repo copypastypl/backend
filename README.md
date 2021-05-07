@@ -6,16 +6,16 @@ Strona z pastami ( ͡° ͜ʖ ͡°)
 Autoryzacja odbywa się poprzez bearer token.
 
 | metoda | endpoint | opis |
-| ------------ | ------------ |
+| ------------ | ------------ |------------ |
 | POST | /users/create/ | Tworzy nowego użytkownika, wymagane pola to username, email, password |
 | POST  | /users/token/  | Wymagane pola to username lub email i password. Zwraca bearer token oraz token do odświeżenia. Token dostępu jest ważny przez 1h, po odświeżeniu przez 24h. |
 | POST  | /users/token/refresh/ | Odświeża token, wymagany jest bearer token. |
 | GET | /users/profile/ | Zwraca informacje o użytkowniku na podstawie zawartego tokenu.
 
-#### Posty
+#### posty
 
 | metoda | endpoint | opis |
-| ------------ | ------------ |
+| ------------ | ------------ |------------ |
 | POST | /posts/ | Tworzy nowy post (paste), wymagana autoryzacja, wymagane pola to title, content, tags (oddzielone przecinkiem tagi) |
 | GET  | /posts/ | Zwraca wszystkie posty, po 15 na request (zwraca też url do następnej strony z postami) |
 | GET  | /posts/**{id}**| Zwraca post o konkretnym id. |
