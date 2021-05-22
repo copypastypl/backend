@@ -12,3 +12,4 @@ class Post(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     tags = models.ManyToManyField(Tag)
+    created_at = models.DateTimeField(auto_now_add=True)
