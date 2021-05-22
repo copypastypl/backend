@@ -11,7 +11,7 @@ class PostView(ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['author__id', 'author__username', 'tags__name',]
+    filterset_fields = ['author__id', 'author__username', 'tags__name', 'created_at', ]
 
     def get_permissions(self):
         if self.action == 'list' or self.action == 'retrieve':
