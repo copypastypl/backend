@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import PostSerializer
-from .models import Post
+from .serializers import PostSerializer, TagSerializer
+from .models import Post, Tag
 
 
 class PostView(ModelViewSet):
@@ -26,3 +27,9 @@ class PostView(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class TagView(ListAPIView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = [AllowAny]
