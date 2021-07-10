@@ -30,4 +30,4 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.SSHKEY }}
-        script: ls & source projects/copypasty/copypastyenv/bin/activate & cd projects/copypasty/app & ls & pip install -r requirements.txt & sudo systemctl restart django_one.socket & sudo systemctl restart django_one.service
+        script: sudo systemctl restart django_one.socket & sudo systemctl restart django_one.service
