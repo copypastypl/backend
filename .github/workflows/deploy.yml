@@ -21,13 +21,15 @@ jobs:
         PASSWORD: ${{ secrets.SSHKEY }}
       with:
         source: "."
-        target: "/root/projects/copypasty"
+        target: "/root/projects/copypasty/app"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
+      working-directory: "/root/projects/copypasty"
+      run: cd /root/projects/copypasty & ls & source copypastyenv/bin/activate & cd app & pip install -r requirements.txt
       with:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         PASSWORD: ${{ secrets.SSHKEY }}
-        script: cd /root/projects/copypasty & ls & source copypastyenv/bin/activate & cd app & pip install -r requirements.txt & sudo systemctl restart django_one.socket & sudo systemctl restart django_one.service
+        script: sudo systemctl restart django_one.socket & sudo systemctl restart django_one.service
