@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import PostSerializer, TagSerializer, CommentSerializer
@@ -15,7 +15,7 @@ class PostView(ModelViewSet):
     filterset_fields = ['author__id', 'author__username', 'tags__name', 'created_at', ]
 
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.request.method in SAFE_METHODS:
             permission_classes = [AllowAny]
         else:
             permission_classes = [IsAuthenticated]
@@ -23,7 +23,10 @@ class PostView(ModelViewSet):
 
     def get_object(self):
         id = self.kwargs.get('pk')
-        return get_object_or_404(Post, id=id, author=self.request.user)
+        if self.request.method in SAFE_METHODS:
+            return get_object_or_404(Post, id=id)
+        else:
+            return get_object_or_404(Post, id=id, author=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -35,7 +38,7 @@ class CommentView(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
 
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.request.method in SAFE_METHODS:
             permission_classes = [AllowAny]
         else:
             permission_classes = [IsAuthenticated]
@@ -44,7 +47,10 @@ class CommentView(ModelViewSet):
     def get_object(self):
         id = self.kwargs.get('pk')
         post_id = self.kwargs.get('post_pk')
-        return get_object_or_404(Comment, id=id, post_id=post_id, author=self.request.user)
+        if self.request.method in SAFE_METHODS:
+            return get_object_or_404(Comment, id=id, post_id=post_id)
+        else:
+            return get_object_or_404(Comment, id=id, post_id=post_id, author=self.request.user)
 
     def perform_create(self, serializer, **kwargs):
         post_id = self.kwargs.get('post_pk')
