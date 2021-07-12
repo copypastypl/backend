@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListAPIView
-from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS
+from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializers import PostSerializer, TagSerializer, CommentSerializer
@@ -10,16 +10,10 @@ from .models import Post, Tag, Comment
 
 class PostView(ModelViewSet):
     queryset = Post.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author__id', 'author__username', 'tags__name', 'created_at', ]
-
-    def get_permissions(self):
-        if self.request.method in SAFE_METHODS:
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
 
     def get_object(self):
         id = self.kwargs.get('pk')
@@ -34,15 +28,9 @@ class PostView(ModelViewSet):
 
 class CommentView(ModelViewSet):
     queryset = Comment.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
-
-    def get_permissions(self):
-        if self.request.method in SAFE_METHODS:
-            permission_classes = [AllowAny]
-        else:
-            permission_classes = [IsAuthenticated]
-        return [permission() for permission in permission_classes]
 
     def get_object(self):
         id = self.kwargs.get('pk')
