@@ -1,2 +1,10 @@
-from django.contrib.auth.models import User
-User._meta.get_field('email')._unique = True
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+from apps.posts.models import Post
+
+
+class UserProfile(AbstractUser):
+    favourite_posts = models.ManyToManyField(Post)
+    email = models.EmailField(unique=True)
+    is_admin = models.BooleanField(default=False)
