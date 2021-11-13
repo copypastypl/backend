@@ -8,3 +8,6 @@ class UserProfile(AbstractUser):
     favourite_posts = models.ManyToManyField(Post)
     email = models.EmailField(unique=True)
     is_admin = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'test'
