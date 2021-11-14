@@ -10,24 +10,30 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = UserProfile
 
 
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'content', 'created_at', 'author')
+
+
 class PostSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Tag.objects.all())
+    comments = serializers.SerializerMethodField('get_comments')
 
     class Meta:
         model = Post
         fields = '__all__'
 
+    def get_comments(self, instance):
+        comments = Comment.objects.filter(post=instance.id)
+        serializer = CommentSerializer(instance=comments, many=True)
+        return serializer.data
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["author"] = AuthorSerializer(instance.author).data
         return representation
-
-
-class CommentSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Comment
-        fields = '__all__'
 
 
 class TagSerializer(serializers.ModelSerializer):
