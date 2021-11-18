@@ -16,6 +16,11 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'content', 'created_at', 'author')
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["author"] = AuthorSerializer(instance.author).data
+        return representation
+
 
 class PostSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Tag.objects.all())
