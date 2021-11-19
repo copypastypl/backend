@@ -4,8 +4,8 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, SAFE_METHODS, IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import PostSerializer, TagSerializer, CommentSerializer
-from .models import Post, Tag, Comment
+from .serializers import PostSerializer, TagSerializer, CommentSerializer, VoteSerializer
+from .models import Post, Tag, Comment, Vote
 
 
 class PostView(ModelViewSet):
@@ -49,3 +49,22 @@ class TagView(ListAPIView):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
+
+
+class VoteView(ModelViewSet):
+    queryset = Vote.objects.all()
+    serializer_class = VoteSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))
+        choice = self.request.data['choice']
+        post_user_vote = post.votes.filter(author=self.request.user).first()
+        if post_user_vote and post_user_vote.choice == choice:
+            post_user_vote.delete()
+            return
+        elif post_user_vote:
+            post_user_vote.delete()
+        vote = serializer.save(author=self.request.user, choice=choice)
+        post.votes.add(vote)
+

@@ -8,6 +8,7 @@ router.register('posts', views.PostView, basename='posts')
 
 domains_router = routers.NestedSimpleRouter(router, r'posts', lookup='post')
 domains_router.register(r'comments', views.CommentView, basename='post-comments')
+domains_router.register(r'votes', views.VoteView, basename='post-votes')
 
 urlpatterns = [
     path('tags/', views.TagView.as_view(), name='tags'),

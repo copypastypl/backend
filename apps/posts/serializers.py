@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.users.models import UserProfile
-from .models import Post, Comment, Tag
+from .models import Post, Comment, Tag, Vote
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -11,7 +11,6 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Comment
         fields = ('id', 'content', 'created_at', 'author')
@@ -42,7 +41,12 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Tag
+        fields = '__all__'
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
         fields = '__all__'
