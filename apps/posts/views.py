@@ -53,8 +53,8 @@ class TagView(ListAPIView):
 
 class VoteView(ModelViewSet):
     queryset = Vote.objects.all()
-    serializer_class = VoteSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = VoteSerializer
 
     def perform_create(self, serializer, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('post_pk'))

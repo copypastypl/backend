@@ -24,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Tag.objects.all())
     comments = serializers.SerializerMethodField('get_comments')
+    votes = serializers.SerializerMethodField('get_votes')
 
     class Meta:
         model = Post
@@ -33,6 +34,16 @@ class PostSerializer(serializers.ModelSerializer):
         comments = Comment.objects.filter(post=instance.id)
         serializer = CommentSerializer(instance=comments, many=True)
         return serializer.data
+
+    def get_votes(self, instance):
+        votes = instance.count_votes()
+        voted = False
+        for vote in votes:
+            if type(vote) != int:
+                for x in vote:
+                    if x.author == self.context['request'].user:
+                        voted = x.choice
+        return {'voted': voted, 'points': votes[2]}
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

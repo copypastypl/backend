@@ -24,6 +24,13 @@ class Post(models.Model):
     votes = models.ManyToManyField(Vote)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def count_votes(self):
+        upvotes = self.votes.filter(choice="upvote")
+        downvotes = self.votes.filter(choice="downvote")
+
+        points = upvotes.count() - downvotes.count()
+        return [upvotes, downvotes, points]
+
 
 class Comment(models.Model):
     author = models.ForeignKey("users.UserProfile", on_delete=models.CASCADE, null=True)
