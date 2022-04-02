@@ -68,3 +68,4 @@ class VoteView(ModelViewSet):
         vote = serializer.save(author=self.request.user, choice=choice)
         post.votes.add(vote)
 
+
