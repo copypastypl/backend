@@ -26,3 +26,4 @@ Autoryzacja odbywa się poprzez bearer token.
 | GET | /posts/**{id}**/comments/**{id}**}/ | Zwraca komentarz o konkretnym id. |
 | POST | /posts/**{id}**/comments/ | Tworzy komentarz, wymagane pola to content i post (id pasty, dla której jest komentarz). |
 | DELETE | /posts/**{id}**/comments/**{ID}**/ | Usuwa komentarz. |
+| POST | /posts/**{id}**/votes/ | Oddaje plusa lub minusa na post. W body w requescie musi byc { "choice": "downvote" } lub { "choice": "upvote" } |
